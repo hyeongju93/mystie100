@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="replyboard">
+	<select id="getlist" parameterType="map"  resultType="com.mysite.vo.ReplyBoardVo">
+	<![CDATA[
+		select *        
+from (select rownum rn,b.no no,name,hit,reg_date regDate,title,user_no userNo
+		from replyboards b,users r 
+		where b.user_no=r.no
+		order by b.no desc)
+where rn<=#{endNum} and rn>#{startNum}
+	]]>
+	</select>
+	
+	<select id="gettotalcount"  resultType="int">
+		<![CDATA[
+			select count(*) from replyboards
+		]]>
+	</select>
+	
+	<select id="getboard" parameterType="com.mysite.vo.ReplyBoardVo" resultType="com.mysite.vo.ReplyBoardVo">
+		<![CDATA[
+			select title,content,user_no userNo,no
+			from replyboards
+			where no=#{no}
+		]]>
+	</select>
+	
+	<insert id="insert" parameterType="com.mysite.vo.ReplyBoardVo">
+		insert into replyboards
+		values(seq_replyboards_no.nextval,#{title},#{content},0,sysdate,#{userNo},seq_replyboards_no.currval,1,0,0,0)
+	</insert>
+	
+	<update id="update" parameterType="com.mysite.vo.ReplyBoardVo">
+		update replyboards
+		set title=#{title}, content=#{content}
+		where no=#{no}
+	</update>
+	
+	
+	<delete id="delete" parameterType="int">
+		delete from replyboards
+		where no=#{no}
+	</delete>
+	
+	<update id="count" parameterType="com.mysite.vo.ReplyBoardVo">
+		update replyboards
+		set hit=hit+1
+		where no=#{no}
+	</update>
+	
+	<select id="searchcount"  parameterType="map" resultType="int">
+		<![CDATA[
+			select count(*)
+from (select *
+        from replyboards b, users r
+        where b.user_no=r.no)
+where title like #{name} or name like  #{name}
+		]]>
+	</select>
+
+	<select id="search"  parameterType="map" resultType="com.mysite.vo.ReplyBoardVo">
+	<![CDATA[
+		select *
+		from (select rownum rn,no,name,hit,regDate,title,userNo
+					from (select b.no no,name,hit,reg_date regDate,title,user_no userNo
+							from replyboards b, users r
+							where b.user_no=r.no)
+					where title like #{name} or name like #{name})
+		where rn<=#{endNum} and rn>#{startNum}
+		order by rn desc
+	]]>
+	</select>
+	
+	
+	
+	
+</mapper>
