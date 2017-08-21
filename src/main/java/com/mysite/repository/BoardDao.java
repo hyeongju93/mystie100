@@ -7,7 +7,9 @@ import java.util.Map;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import com.mysite.vo.boardVo;
+
+import com.mysite.vo.BoardVo;
+
 
 @Repository
 public class BoardDao {
@@ -15,7 +17,7 @@ public class BoardDao {
 	@Autowired
 	private SqlSession sqlSession;
 	
-	public List<boardVo> getlist(int endNum,int startNum) {
+	public List<BoardVo> getlist(int endNum,int startNum) {
 		Map<String, Object> pageMap=new HashMap<String,Object>();
 		pageMap.put("endNum", endNum);
 		pageMap.put("startNum", startNum);
@@ -26,15 +28,15 @@ public class BoardDao {
 		return sqlSession.selectOne("board.gettotalcount");
 	}
 	
-	public boardVo getboard(boardVo boardvo) {
+	public BoardVo getboard(BoardVo boardvo) {
 		return sqlSession.selectOne("board.getboard", boardvo);
 	}
 		
-	public int insert(boardVo boardvo) {
+	public int insert(BoardVo boardvo) {
 		return sqlSession.insert("board.insert", boardvo);
 	}
 	
-	public int update(boardVo boardvo) {
+	public int update(BoardVo boardvo) {
 		return sqlSession.update("board.update", boardvo);
 	}
 	
@@ -42,7 +44,7 @@ public class BoardDao {
 		return sqlSession.delete("board.delete", num);
 	}
 	
-	public int count(boardVo boardvo) {
+	public int count(BoardVo boardvo) {
 		return sqlSession.update("board.count", boardvo);
 	}
 	
@@ -52,12 +54,12 @@ public class BoardDao {
 		return sqlSession.selectOne("board.searchcount",pageMap);
 	}
 	
-	public List<boardVo> search(String name,int startNum,int endNum) {
+	public List<BoardVo> search(String name,int startNum,int endNum) {
 		Map<String, Object> pageMap=new HashMap<String,Object>();
 		pageMap.put("endNum", endNum);
 		pageMap.put("startNum", startNum);
 		pageMap.put("name", '%'+name+'%');
-		List<boardVo> list=sqlSession.selectList("board.search", pageMap);
+		List<BoardVo> list=sqlSession.selectList("board.search", pageMap);
 		return list;
 	}
 

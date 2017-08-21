@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.mysite.vo.ReplyBoardVo;
-import com.mysite.vo.boardVo;
+import com.mysite.vo.BoardVo;
 
 @Repository
 public class ReplyBoardDao {

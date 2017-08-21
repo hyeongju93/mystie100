@@ -1,5 +1,7 @@
 package com.mysite.controller;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.mysite.service.ReplyBoardService;
 import com.mysite.vo.PageVo;
 import com.mysite.vo.ReplyBoardVo;
-import com.mysite.vo.boardVo;
+import com.mysite.vo.BoardVo;
 
 @Controller
 @RequestMapping("replyboard")
@@ -36,7 +38,8 @@ public class ReplyBoardController {
 	}
 	
 	@RequestMapping(value="/read",method=RequestMethod.GET)
-	public String read(ReplyBoardVo replyboardvo,Model model,@RequestParam("flag") int flag) {
+	public String read(ReplyBoardVo replyboardvo,Model model,@RequestParam("flag") int flag,@RequestParam("kwd") String kwd) {
+		System.out.println(kwd);
 		ReplyBoardVo vo=replyboardService.getboard(replyboardvo,flag);
 		model.addAttribute("vo", vo);
 		return "replyboard/read";
@@ -61,9 +64,12 @@ public class ReplyBoardController {
 	}
 	
 	@RequestMapping(value="/modify",method=RequestMethod.POST)
-	public String modify(@ModelAttribute ReplyBoardVo replyboardvo,@RequestParam("currNo") int currNo,@RequestParam("kwd") String kwd) {
+	public String modify(@ModelAttribute ReplyBoardVo replyboardvo,@RequestParam("currNo") int currNo,@RequestParam("kwd") String kwd) throws UnsupportedEncodingException {
+		System.out.println(kwd);
 		replyboardService.update(replyboardvo);
-		return "redirect:/replyboard/read?flag=0&no="+replyboardvo.getNo()+"&currNo="+currNo+"&kwd="+kwd;	//kwd에 한글로 보낼시 받는 입장에서 ?? 로 받음
+		System.out.println("redirect:/replyboard/read?flag=0&no="+replyboardvo.getNo()+"&currNo="+currNo+"&kwd="+kwd);
+		kwd=URLEncoder.encode(kwd, "UTF-8");
+		return "redirect:/replyboard/read?flag=0&no="+replyboardvo.getNo()+"&currNo="+currNo+"&kwd="+kwd;	//kwd에 한글로 보낼시 받는 입장에서 ?? 로 받음 => 한글로 코딩하여 해결해야 함
 	}
 	
 	

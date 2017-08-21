@@ -1,6 +1,6 @@
 package com.mysite.vo;
 
-public class boardVo {
+public class BoardVo {
 	private int rn;
 	private int no;
 	private String title;
@@ -10,11 +10,11 @@ public class boardVo {
 	private int userNo;
 	private String name;
 	
-	public boardVo() {
+	public BoardVo() {
 		super();
 	}
 
-	public boardVo(int rn, int no, String title, String content, int hit, String regDate, int userNo, String name) {
+	public BoardVo(int rn, int no, String title, String content, int hit, String regDate, int userNo, String name) {
 		super();
 		this.rn = rn;
 		this.no = no;
@@ -97,10 +97,5 @@ public class boardVo {
 	}
 	
 	
-	
-	
-	
-	
-
 	
 }

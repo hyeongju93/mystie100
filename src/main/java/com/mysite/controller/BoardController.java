@@ -11,8 +11,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.mysite.service.BoardService;
+import com.mysite.vo.BoardVo;
 import com.mysite.vo.PageVo;
-import com.mysite.vo.boardVo;
+
 
 @Controller
 @RequestMapping("board")
@@ -25,7 +26,7 @@ public class BoardController {
 	@RequestMapping(value="/list",method=RequestMethod.GET)
 	public String list(Model model,int currNo) {
 		PageVo pageVo=boardService.getPage(currNo);		
-		List<boardVo> list=boardService.getlist(currNo,pageVo);
+		List<BoardVo> list=boardService.getlist(currNo,pageVo);
 		
 		model.addAttribute("list", list);
 		model.addAttribute("page", pageVo);
@@ -35,8 +36,8 @@ public class BoardController {
 	}
 	
 	@RequestMapping(value="/read",method=RequestMethod.GET)
-	public String read(boardVo boardvo,Model model,@RequestParam("flag") int flag) {
-		boardVo vo=boardService.getboard(boardvo,flag);
+	public String read(BoardVo boardvo,Model model,@RequestParam("flag") int flag) {
+		BoardVo vo=boardService.getboard(boardvo,flag);
 		model.addAttribute("vo", vo);
 		return "board/read";
 	}
@@ -47,20 +48,20 @@ public class BoardController {
 	}
 	
 	@RequestMapping(value="/write",method=RequestMethod.POST)
-	public String write(@ModelAttribute boardVo boardvo) {
+	public String write(@ModelAttribute BoardVo boardvo) {
 		boardService.insert(boardvo);
 		return "redirect:/board/list?currNo=1";
 	}
 	
 	@RequestMapping(value="/modifyform",method=RequestMethod.GET)
-	public String modifyform(boardVo boardvo,Model model) {
-		boardVo vo=boardService.getboardinfo(boardvo);
+	public String modifyform(BoardVo boardvo,Model model) {
+		BoardVo vo=boardService.getboardinfo(boardvo);
 		model.addAttribute("vo", vo);
 		return "board/modifyform";
 	}
 	
 	@RequestMapping(value="/modify",method=RequestMethod.POST)
-	public String modify(@ModelAttribute boardVo boardvo,@RequestParam("currNo") int currNo,@RequestParam("kwd") String kwd) {
+	public String modify(@ModelAttribute BoardVo boardvo,@RequestParam("currNo") int currNo,@RequestParam("kwd") String kwd) {
 		boardService.update(boardvo);
 		return "redirect:/board/read?flag=0&no="+boardvo.getNo()+"&currNo="+currNo+"&kwd="+kwd;	//kwd에 한글로 보낼시 받는 입장에서 ?? 로 받음
 	}
@@ -74,7 +75,7 @@ public class BoardController {
 	
 	@RequestMapping(value="/search",method=RequestMethod.GET)
 	public String search(@RequestParam("kwd") String name,int currNo,Model model ) {		
-		List<boardVo> list=boardService.search(currNo,name);
+		List<BoardVo> list=boardService.search(currNo,name);
 		model.addAttribute("list", list);
 		PageVo pageVo=boardService.searchPage(currNo,name);
 		

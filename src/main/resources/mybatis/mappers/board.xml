@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="board">
-	<select id="getlist" parameterType="map"  resultType="com.mysite.vo.boardVo">
+	<select id="getlist" parameterType="map"  resultType="com.mysite.vo.BoardVo">
 	<![CDATA[
 		select *        
 from (select rownum rn,b.no,name,hit,reg_date regDate,title,user_no userNo
@@ -19,7 +19,7 @@ where rn<=#{endNum} and rn>#{startNum}
 		]]>
 	</select>
 	
-	<select id="getboard" parameterType="com.mysite.vo.boardVo" resultType="com.mysite.vo.boardVo">
+	<select id="getboard" parameterType="com.mysite.vo.BoardVo" resultType="com.mysite.vo.BoardVo">
 		<![CDATA[
 			select title,content,user_no userNo,no
 			from boards
@@ -27,12 +27,12 @@ where rn<=#{endNum} and rn>#{startNum}
 		]]>
 	</select>
 	
-	<insert id="insert" parameterType="com.mysite.vo.boardVo">
+	<insert id="insert" parameterType="com.mysite.vo.BoardVo">
 		insert into boards
 		values(seq_boards_no.nextval,#{title},#{content},0,sysdate,#{userNo})
 	</insert>
 	
-	<update id="update" parameterType="com.mysite.vo.boardVo">
+	<update id="update" parameterType="com.mysite.vo.BoardVo">
 		update boards
 		set title=#{title}, content=#{content}
 		where no=#{no}
@@ -44,7 +44,7 @@ where rn<=#{endNum} and rn>#{startNum}
 		where no=#{no}
 	</delete>
 	
-	<update id="count" parameterType="com.mysite.vo.boardVo">
+	<update id="count" parameterType="com.mysite.vo.BoardVo">
 		update boards
 		set hit=hit+1
 		where no=#{no}
@@ -60,7 +60,7 @@ where title like #{name} or name like  #{name}
 		]]>
 	</select>
 
-	<select id="search"  parameterType="map" resultType="com.mysite.vo.boardVo">
+	<select id="search"  parameterType="map" resultType="com.mysite.vo.BoardVo">
 	<![CDATA[
 		select *
 		from (select rownum rn,no,name,hit,regDate,title,userNo

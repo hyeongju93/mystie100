@@ -17,6 +17,8 @@
 		]]>
 	</insert>
 	
+	
+	
 	<delete id="delete" parameterType="map">
 		<![CDATA[
 			delete from guestbooks

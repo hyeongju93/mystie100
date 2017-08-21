@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import com.mysite.repository.ReplyBoardDao;
 import com.mysite.vo.PageVo;
 import com.mysite.vo.ReplyBoardVo;
-import com.mysite.vo.boardVo;
+import com.mysite.vo.BoardVo;
 
 @Service
 public class ReplyBoardService {

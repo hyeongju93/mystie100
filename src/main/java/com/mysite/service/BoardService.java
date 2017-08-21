@@ -6,8 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mysite.repository.BoardDao;
+import com.mysite.vo.BoardVo;
 import com.mysite.vo.PageVo;
-import com.mysite.vo.boardVo;
+
 
 @Service
 public class BoardService {
@@ -16,7 +17,7 @@ public class BoardService {
 	private BoardDao boardao;
 
 	
-	public List<boardVo> getlist(int currNo,PageVo pageVo) {		
+	public List<BoardVo> getlist(int currNo,PageVo pageVo) {		
 		int endNum=pageVo.getTotalCount()-pageVo.getPageNo()*(pageVo.getCurrNo()-1);
 		int startNum=pageVo.getTotalCount()-pageVo.getPageNo()*pageVo.getCurrNo();		
 		return boardao.getlist(endNum,startNum);
@@ -29,8 +30,8 @@ public class BoardService {
 		return pageVo;
 	}
 	
-	public boardVo getboard(boardVo boardvo,int flag) {
-		boardVo vo=boardao.getboard(boardvo);
+	public BoardVo getboard(BoardVo boardvo,int flag) {
+		BoardVo vo=boardao.getboard(boardvo);
 		if(flag==1) {
 			boardao.count(boardvo);
 		}
@@ -38,16 +39,16 @@ public class BoardService {
 		return vo;
 	}
 	
-	public boardVo getboardinfo(boardVo boardvo) {
-		boardVo vo=boardao.getboard(boardvo);
+	public BoardVo getboardinfo(BoardVo boardvo) {
+		BoardVo vo=boardao.getboard(boardvo);
 		return vo;
 	}
 	
-	public int insert(boardVo boardvo) {
+	public int insert(BoardVo boardvo) {
 		return boardao.insert(boardvo);
 	}
 	
-	public int update(boardVo boardvo) {
+	public int update(BoardVo boardvo) {
 		return boardao.update(boardvo);
 	}
 	
@@ -55,11 +56,11 @@ public class BoardService {
 		return boardao.delete(num);
 	}
 	
-	public int count(boardVo boardvo) {
+	public int count(BoardVo boardvo) {
 		return boardao.count(boardvo);
 	}	
 	
-	public List<boardVo> search(int currNo,String name) {
+	public List<BoardVo> search(int currNo,String name) {
 		PageVo pageVo=new PageVo();
 		int totalCount=boardao.searchcount(name);
 		pageVo.setting(currNo, totalCount);
