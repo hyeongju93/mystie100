@@ -1,5 +1,7 @@
 package com.mysite.controller;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,8 +63,9 @@ public class BoardController {
 	}
 	
 	@RequestMapping(value="/modify",method=RequestMethod.POST)
-	public String modify(@ModelAttribute BoardVo boardvo,@RequestParam("currNo") int currNo,@RequestParam("kwd") String kwd) {
+	public String modify(@ModelAttribute BoardVo boardvo,@RequestParam("currNo") int currNo,@RequestParam("kwd") String kwd) throws UnsupportedEncodingException {
 		boardService.update(boardvo);
+		kwd=URLEncoder.encode(kwd, "UTF-8");
 		return "redirect:/board/read?flag=0&no="+boardvo.getNo()+"&currNo="+currNo+"&kwd="+kwd;	//kwd에 한글로 보낼시 받는 입장에서 ?? 로 받음
 	}
 	

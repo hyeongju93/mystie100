@@ -4,12 +4,14 @@
 <mapper namespace="board">
 	<select id="getlist" parameterType="map"  resultType="com.mysite.vo.BoardVo">
 	<![CDATA[
-		select *        
-from (select rownum rn,b.no,name,hit,reg_date regDate,title,user_no userNo
-		from boards b,users r 
-		where b.user_no=r.no
-		order by no desc)
+		select *
+from (select rownum rn,no,name,hit,regDate,title,userNo
+from (select b.no no,name,hit,reg_date regDate,title,user_no userNo 
+from boards b,users r 
+where b.user_no=r.no
+order by b.no))
 where rn<=#{endNum} and rn>#{startNum}
+order by rn desc
 	]]>
 	</select>
 	
@@ -63,13 +65,14 @@ where title like #{name} or name like  #{name}
 	<select id="search"  parameterType="map" resultType="com.mysite.vo.BoardVo">
 	<![CDATA[
 		select *
-		from (select rownum rn,no,name,hit,regDate,title,userNo
-					from (select b.no no,name,hit,reg_date regDate,title,user_no userNo
-							from boards b, users r
-							where b.user_no=r.no)
-					where title like #{name} or name like #{name})
-		where rn<=#{endNum} and rn>#{startNum}
-		order by rn desc
+from (select rownum rn,no,name,hit,regDate,title,userNo
+from (select b.no no,name,hit,reg_date regDate,title,user_no userNo 
+from boards b,users r 
+where b.user_no=r.no
+order by b.no)
+where title like #{name} or name like #{name})
+where rn<=#{endNum} and rn>#{startNum}
+order by rn desc
 	]]>
 	</select>
 	
