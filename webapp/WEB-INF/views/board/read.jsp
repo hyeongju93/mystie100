@@ -40,10 +40,10 @@
 					<c:if test="${!(empty param.kwd) }">
 						<a href="${pageContext.request.contextPath }/board/search?currNo=${param.currNo}&kwd=${param.kwd}">글목록</a>
 					</c:if>
-					<c:if test="${sessionScope.authUser.no==vo.userNo }">
-						
-						<a href="${pageContext.request.contextPath }/board/modifyform?no=${vo.no}&currNo=${param.currNo}&kwd=${param.kwd}">글수정</a>
 					
+					
+					<c:if test="${sessionScope.authUser.no==vo.userNo }">	
+						<a href="${pageContext.request.contextPath }/board/modifyform?no=${vo.no}&currNo=${param.currNo}&kwd=${param.kwd}">글수정</a>				
 					</c:if>
 				</div>
 			</div>

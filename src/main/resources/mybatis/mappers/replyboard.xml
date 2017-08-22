@@ -5,11 +5,11 @@
 	<select id="getlist" parameterType="map"  resultType="com.mysite.vo.ReplyBoardVo">
 	<![CDATA[
 		select *
-from (select rownum rn,no,name,hit,regDate,title,userNo
-from (select b.no no,name,hit,reg_date regDate,title,user_no userNo 
+from (select rownum rn,no,name,hit,regDate,title,userNo,depth,groupNo,orderNo
+from (select b.no no,name,hit,reg_date regDate,title,user_no userNo,group_no groupNo,order_no orderNo,depth 
 from replyboards b,users r 
 where b.user_no=r.no
-order by b.no))
+order by group_no,order_no desc))
 where rn<=#{endNum} and rn>#{startNum}
 order by rn desc
 	]]>
@@ -30,21 +30,83 @@ order by rn desc
 	</select>
 	
 	<insert id="insert" parameterType="com.mysite.vo.ReplyBoardVo">
+		<![CDATA[
 		insert into replyboards
 		values(seq_replyboards_no.nextval,#{title},#{content},0,sysdate,#{userNo},seq_replyboards_no.currval,1,0,0,0)
+		]]>
 	</insert>
 	
 	<update id="update" parameterType="com.mysite.vo.ReplyBoardVo">
+		<![CDATA[
 		update replyboards
 		set title=#{title}, content=#{content}
 		where no=#{no}
+		]]>
 	</update>
 	
 	
-	<delete id="delete" parameterType="int">
-		delete from replyboards
-		where no=#{no}
+	<select id="deletern" parameterType="map" resultType="int">
+		<![CDATA[
+		select rn
+from (select rownum rn ,no,name,title,userNo,groupNo,orderNo,depth
+from (select r.no no,name,title,user_no userNo,group_no groupNo,order_no orderNo,depth
+from replyboards r, users u
+where user_no=u.no
+order by group_no desc,order_no asc)
+where depth=#{depth} and groupNo=#{groupNo})
+where no=#{no}
+	]]>
+	</select>
+	
+	<select id="deletecheck" parameterType="map" resultType="String">
+	<![CDATA[	
+		select name
+from (select rownum rn ,no,name,title,userNo,groupNo,orderNo,depth
+from (select r.no no,name,title,user_no userNo,group_no groupNo,order_no orderNo,depth
+from replyboards r, users u
+where user_no=u.no
+order by group_no desc,order_no asc)
+where depth=#{depth} and groupNo=#{groupNo})
+where rn=#{rn}+1
+	]]>
+	</select>
+	
+	<select id="deleteinfo" parameterType="map" resultType="int">
+	<![CDATA[	
+		select orderNo
+from (select rownum rn ,no,name,title,userNo,groupNo,orderNo,depth
+from (select r.no no,name,title,user_no userNo,group_no groupNo,order_no orderNo,depth
+from replyboards r, users u
+where user_no=u.no
+order by group_no desc,order_no asc)
+where depth=#{depth} and groupNo=#{groupNo})
+where rn=#{rn}+1
+	]]>
+	</select>
+	
+	<delete id="delete" parameterType="map">
+	<![CDATA[	
+delete from (select r.no no,name,title,user_no userNo,group_no groupNo,order_no orderNo,depth
+from replyboards r, users u
+where user_no=u.no
+order by group_no desc,order_no asc)
+where orderNo>=#{orderFirst} and orderNo<#{orderEnd} and groupNo=#{groupNo}	
+	]]>
 	</delete>
+	
+	<delete id="delete2" parameterType="map">
+	<![CDATA[	
+delete from (select r.no no,name,title,user_no userNo,group_no groupNo,order_no orderNo,depth
+from replyboards r, users u
+where user_no=u.no
+order by group_no desc,order_no asc)
+where orderNo>=#{orderFirst} and depth>#{depth} and groupNo=#{groupNo}	
+	]]>
+	</delete>
+	
+	
+	
+	
 	
 	<update id="count" parameterType="com.mysite.vo.ReplyBoardVo">
 		update replyboards
@@ -66,16 +128,37 @@ where title like #{name} or name like  #{name}
 	<![CDATA[
 		select *
 from (select rownum rn,no,name,hit,regDate,title,userNo
-from (select b.no no,name,hit,reg_date regDate,title,user_no userNo 
+from (select b.no no,name,hit,reg_date regDate,title,user_no userNo,group_no groupNo,order_no orderNo 
 from replyboards b,users r 
 where b.user_no=r.no
-order by b.no)
+order by group_no,order_no desc)
 where title like #{name} or name like #{name})
 where rn<=#{endNum} and rn>#{startNum}
 order by rn desc
 	]]>
 	</select>
 
+	<select id="inforeply" parameterType="int" resultType="com.mysite.vo.ReplyBoardVo">
+		<![CDATA[
+			select group_no groupNo,order_no orderNo,depth
+			from replyboards
+			where no=#{no}
+		]]>
+	</select>
+	
+	
+	<update id="replyupdate" parameterType="com.mysite.vo.ReplyBoardVo">
+		update replyboards
+		set order_no=(order_no+1)
+		where (order_no>#{orderNo} and group_no=#{groupNo})
+	</update>
+	
+	
+	<insert id="reply" parameterType="com.mysite.vo.ReplyBoardVo">
+		insert into replyboards
+		values(seq_replyboards_no.nextval,#{title},#{content},0,sysdate,#{userNo},#{groupNo},
+		(#{orderNo}+1),(#{depth}+1),0,0)
+	</insert>
 	
 	
 </mapper>

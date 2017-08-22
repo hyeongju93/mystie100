@@ -4,6 +4,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.mysite.service.ReplyBoardService;
 import com.mysite.vo.PageVo;
 import com.mysite.vo.ReplyBoardVo;
+import com.mysite.vo.UserVo;
 import com.mysite.vo.BoardVo;
 
 @Controller
@@ -74,8 +77,15 @@ public class ReplyBoardController {
 	
 	
 	@RequestMapping(value="/delete",method=RequestMethod.GET)
-	public String delete(@RequestParam("no") int no ) {
-		replyboardService.delete(no);
+	public String delete(@RequestParam("no") int no,
+						@RequestParam("groupNo") int groupNo,
+						@RequestParam("depth") int depth,
+						@RequestParam("orderNo") int orderNo) {
+		System.out.println("no: "+no);
+		System.out.println("groupNo: "+groupNo);
+		System.out.println("depth: "+depth);
+		System.out.println("orderNo: "+orderNo);
+		replyboardService.delete(no,groupNo,depth,orderNo);
 		return "redirect:/replyboard/list?currNo=1";
 	}
 	
@@ -88,6 +98,27 @@ public class ReplyBoardController {
 		model.addAttribute("page", pageVo);
 		model.addAttribute("kwd", name);	
 		return "replyboard/list";
+	}
+	
+	@RequestMapping(value="/replyform",method=RequestMethod.GET)
+	public String replyform() {
+		return "replyboard/replyform";
+	}
+	
+	@RequestMapping(value="/reply",method=RequestMethod.POST)
+	public String reply(@ModelAttribute ReplyBoardVo vo,@RequestParam("num") int no,HttpSession httpsession) {
+		System.out.println("reply도착");
+		UserVo userVo=(UserVo)httpsession.getAttribute("authUser");
+		int userNo=userVo.getNo();
+		ReplyBoardVo replyboardvo=replyboardService.inforeply(no);
+		System.out.println(replyboardvo);
+		replyboardvo.setUserNo(userNo);
+		replyboardvo.setContent(vo.getContent());
+		replyboardvo.setTitle(vo.getTitle());
+		System.out.println(replyboardvo);
+		replyboardService.reply(replyboardvo);
+		System.out.println(replyboardvo);
+		return "redirect:/replyboard/list?currNo=1";
 	}
 	
 	

@@ -34,14 +34,18 @@
 					<c:forEach items="${list}" var="vo">
 					<tr>
 						<td>${vo.rn }</td>
-						<td><a href="${pageContext.request.contextPath }/replyboard/read?flag=1&hit=${vo.hit }&no=${vo.no }&currNo=${page.currNo}&kwd=${param.kwd}">${vo.title}</a></td>
+						<td><a href="${pageContext.request.contextPath }/replyboard/read?flag=1&no=${vo.no }&currNo=${page.currNo}&kwd=${param.kwd}">
+						<c:forEach var="i" begin="1" end="${vo.depth }" step="1">
+					 		<img  src="${pageContext.request.contextPath }/assets/images/reply.png"  width=10 height=10>
+						</c:forEach>
+						${vo.title}</a></td>
 						<td>${vo.name }</td>
 						<td>${vo.hit }</td>
 						<td>${vo.regDate }</td>
 						
 						<td>
 							<c:if test="${sessionScope.authUser.no==vo.userNo }">
-							<a href="${pageContext.request.contextPath }/replyboard/delete?no=${vo.no }&currNo=${page.currNo}" class="del">삭제</a>
+							<a href="${pageContext.request.contextPath }/replyboard/delete?no=${vo.no }&currNo=${page.currNo}&depth=${vo.depth}&groupNo=${vo.groupNo}&orderNo=${vo.orderNo}" class="del">삭제</a>
 							</c:if>
 						</td>
 						

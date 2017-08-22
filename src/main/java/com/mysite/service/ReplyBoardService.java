@@ -52,8 +52,25 @@ public class ReplyBoardService {
 		return replyboardao.update(replyboardvo);
 	}
 	
-	public int delete(int num) {
-		return replyboardao.delete(num);
+	public int delete(int no,int groupNo,int depth,int orderNo) {
+		int rn=replyboardao.deletern(no,groupNo,depth);
+		System.out.println("deletern 성공");
+		String check=replyboardao.deletecheck(rn,groupNo,depth);
+		if(check==null) {
+			System.out.println("delete null 접근");
+			replyboardao.delete2(orderNo, depth, groupNo);
+			return replyboardao.delete(orderNo,orderNo+1,groupNo);
+		} else {
+			
+			System.out.println("delete null 아님");
+			int orderEnd=replyboardao.deleteinfo(rn,groupNo,depth);
+			System.out.println("deleteinfo 성공");
+			System.out.println(rn);
+			System.out.println(orderNo);
+			System.out.println(orderEnd);
+			return replyboardao.delete(orderNo,orderEnd,groupNo);	
+		}
+		
 	}
 	
 	public int count(ReplyBoardVo replyboardvo) {
@@ -75,5 +92,19 @@ public class ReplyBoardService {
 		pageVo.setting(currNo, totalCount);
 		return pageVo;
 	}
+	
+	public ReplyBoardVo inforeply(int no) {
+		System.out.println("service");
+		return replyboardao.inforeply(no);
+	}
 
+	public int reply(ReplyBoardVo replyboardvo) {
+		System.out.println("service");
+		replyboardao.replyupdate(replyboardvo);
+		replyboardao.reply(replyboardvo);		
+		return 0;
+	}
+	
+	
+	
 }
